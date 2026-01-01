@@ -1,31 +1,34 @@
-Custom Base Mileage (k),90,,,,,,,,,,,,,
-,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,
-,,,18,0.8,Q1: 2k Ez + 10k Mp + 2k Ez + 10k Mp + 3k Ez (nonstop),,Q2: 13 Ez + 5 Thr (3') + 3 Thr + 3 Ez,,22,52,-20,"Christmas / Colombia
+"Custom Base Mileage (k)","90","","","","","","","","","","","","",""
+"","","","","","","","","","","","","","",""
+"","","","","","","","","","","","","","",""
+"","","","","","","","","","","","","","",""
+"","","","","","","","","","","","","","",""
+"","","","","","","","","","","","","","",""
+"","","","","","","","","","","","","","",""
+"","","","","","","","","","","","","","",""
+"","","","","","","","","","","","","","",""
+"","","","Weeks until race","Fraction of peak","Workout Q1 (k)","Notes Q1"," for Q1","Worout Q2 ()","Notes Q2"," for Q2","Weekly Easy Mileage (k)","Actual (k)","Difference (k)","Notes"
+"","","","18","0.8","Q1: 2k Ez + 10k Mp + 2k Ez + 10k Mp + 3k Ez (nonstop)","Not did","26","Q2: 13 Ez + 5 Thr (3') + 3 Thr + 3 Ez","In short as Trail Thr","24","22","52","-20","Christmas / Colombia
 No Full Mileage
 3x Trail Barrichara, 3x Tready"
-,,,17,0.8,Q1: 3k Ez + 5k Thr + 60' Ez + 2k Thr + 2k Ez,,Q2: 6 Ez + 5 × (1 I (3' jg)) + 4 × (400m R (400m jg)) + 3 Ez,,27,,-72,"Last week colombia.
+"","","","17","0.8","Q1: 3k Ez + 5k Thr + 60' Ez + 2k Thr + 2k Ez","Tready - Less Distance","24","Q2: 6 Ez + 5 × (1 I (3' jg)) + 4 × (400m R (400m jg)) + 3 Ez","Tready - Less Distance
+With Time","21","27","","-72","Last week colombia.
 Track, 6x Tready & Bike
 Drills, Step ups, Strength"
-,,,16,0.9,Q1: Steady Ez run (lesser of 26k or 120'),,Q2: 10 Ez + 5 Thr (3' Ez) + 3 Thr (2' Ez) + 2 Thr + 3 Ez,,32,,-81,
-,,,15,0.9,Q1: 3k Ez + 13k Mp + 2k Ez + 5k Mp + 3k Ez,,Q2: 40' Ez + 3 × (3k Thr (2')) + 2 × (2k Thr (1')) + 2k Ez,,31,,-81,
-,,,14,0.9,Q1: 2k Ez + 2 × (3k Thr (2')) + 60' Ez + 3k Thr + 2k Ez,,Q2: 13k Ez + 6 × (1k I (3' jg)) + 3k Ez,,32,,-81,
-,,,13,0.8,Q1: Steady Ez run (lesser of 27k or 120'),,Q2: 40' Ez + 5k Thr (2') + 2 × (3k Thr (1')) + 3k Ez,,21,,-72,
-,,,12,1,Q1: 2k Ez + 13k Mp + 2k Ez + 10k Mp + 2k Ez,,Q2: 6k Ez + 5k Thr (3' Ez) + 3k Thr (2' Ez) + 3k Thr (2' Ez) + 2k Thr + 3k Ez,,40,,-90,
-,,,11,0.9,Q1: 19k Ez + 5k Thr + 2k Ez,,Q2: 13k Ez + 5 × (1k I (2' jg)) + 4 × (400m R (400m jg)) + 2k Ez,,31,,-81,
-,,,10,0.9,Q1: Steady Ez run (lesser of 29k or 130'),,Q2: 3k Ez + 19k Mp + 3k Ez,,26,,-81,
-,,,9,1,Q1: 5k Ez + 10k Mp + 2k Ez + 6k Mp + 2k Thr + 2k Ez,,Q2: 8k Ez + 4 × (3k Thr (2')) + 3k Ez,,40,,-90,
-,,,8,1,Q1: 3k Ez + 3k Thr + 60' Ez + 3k Thr + 3k Ez OR 100' Ez + 13k Mp + 2k Ez,,Q2: 13k Ez + 6 × (1k I (3' jg)) + 3k Ez,,37,,-90,
-,,,7,0.9,Q1: Steady Ez run (lesser of 32k or 150'),,Q2: 3k Ez + 13k Mp + 2 × (3k Thr (2')) + 3k Ez,,23,,-81,
-,,,6,1,Q1: 5k Ez + 19k Mp + 3k Ez,,Q2: 40' Ez + 4 × (3k Thr (2')) + 2 × (2k Thr (1')) + 2k Ez,,36,,-90,
-,,,5,0.9,Q1: 10k Ez + 3k Thr + 10k Ez + 3k Thr + 2k Ez,,Q2: 13k Ez + 5 × (1k I (3' jg)) + 6 × (200m R (200m jg)) + 3k Ez,,28,,-81,
-,,,4,0.9,Q1: Steady Ez run (lesser of 32k or 150'),,Q2: 10k Ez + 5 × (1k I (3' Ez)) + 6k Ez,,25,,-81,
-,,,3,0.8,Q1: 3k Ez + 10k Mp + 2k Ez + 10k Mp + 3k Ez,,Q2: 3k Ez + 4 × (3k Thr (2' Ez)) + 3k Ez,,26,,-72,
-,,,2,0.8,Q1: 3k Ez + 3 × (3k Thr (2')) + 11k Ez,,Q2: 5k Ez + 2k Thr + 3k Mp + 2k Thr + 3k Mp + 3k Ez,,30,,-72,
-,,,1,0,Q1 (7 days out): 90' Ez,,Q2 (5 days out): 5k Ez + 3 × (2k Thr (2')) + 3k Ez,,0,,,
+"","","","16","0.9","Q1: Steady Ez run (lesser of 26k or 120')","W19 Q1","26","Q2: 10 Ez + 5 Thr (3' Ez) + 3 Thr (2' Ez) + 2 Thr + 3 Ez","Rheinzabern 15k
+WU/CD","23","32","","-81",""
+"","","","15","0.9","Q1: 3k Ez + 13k Mp + 2k Ez + 5k Mp + 3k Ez","W18 Q1 - Recovery Rheinzabern","26","Q2: 40' Ez + 3 × (3k Thr (2')) + 2 × (2k Thr (1')) + 2k Ez","","24","31","","-81",""
+"","","","14","0.9","Q1: 2k Ez + 2 × (3k Thr (2')) + 60' Ez + 3k Thr + 2k Ez","","26","Q2: 13k Ez + 6 × (1k I (3' jg)) + 3k Ez","","23","32","","-81",""
+"","","","13","0.8","Q1: Steady Ez run (lesser of 27k or 120')","","27","Q2: 40' Ez + 5k Thr (2') + 2 × (3k Thr (1')) + 3k Ez","","24","21","","-72",""
+"","","","12","1","Q1: 2k Ez + 13k Mp + 2k Ez + 10k Mp + 2k Ez","","27","Q2: 6k Ez + 5k Thr (3' Ez) + 3k Thr (2' Ez) + 3k Thr (2' Ez) + 2k Thr + 3k Ez","","23","40","","-90",""
+"","","","11","0.9","Q1: 19k Ez + 5k Thr + 2k Ez","","26","Q2: 13k Ez + 5 × (1k I (2' jg)) + 4 × (400m R (400m jg)) + 2k Ez","","24","31","","-81",""
+"","","","10","0.9","Q1: Steady Ez run (lesser of 29k or 130')","","29","Q2: 3k Ez + 19k Mp + 3k Ez","","26","26","","-81",""
+"","","","9","1","Q1: 5k Ez + 10k Mp + 2k Ez + 6k Mp + 2k Thr + 2k Ez","","26","Q2: 8k Ez + 4 × (3k Thr (2')) + 3k Ez","","24","40","","-90",""
+"","","","8","1","Q1: 3k Ez + 3k Thr + 60' Ez + 3k Thr + 3k Ez OR 100' Ez + 13k Mp + 2k Ez","","27","Q2: 13k Ez + 6 × (1k I (3' jg)) + 3k Ez","","26","37","","-90",""
+"","","","7","0.9","Q1: Steady Ez run (lesser of 32k or 150')","","32","Q2: 3k Ez + 13k Mp + 2 × (3k Thr (2')) + 3k Ez","","26","23","","-81",""
+"","","","6","1","Q1: 5k Ez + 19k Mp + 3k Ez","","27","Q2: 40' Ez + 4 × (3k Thr (2')) + 2 × (2k Thr (1')) + 2k Ez","","27","36","","-90",""
+"","","","5","0.9","Q1: 10k Ez + 3k Thr + 10k Ez + 3k Thr + 2k Ez","","27","Q2: 13k Ez + 5 × (1k I (3' jg)) + 6 × (200m R (200m jg)) + 3k Ez","","26","28","","-81",""
+"","","","4","0.9","Q1: Steady Ez run (lesser of 32k or 150')","","32","Q2: 10k Ez + 5 × (1k I (3' Ez)) + 6k Ez","","24","25","","-81",""
+"","","","3","0.8","Q1: 3k Ez + 10k Mp + 2k Ez + 10k Mp + 3k Ez","","27","Q2: 3k Ez + 4 × (3k Thr (2' Ez)) + 3k Ez","","19","26","","-72",""
+"","","","2","0.8","Q1: 3k Ez + 3 × (3k Thr (2')) + 11k Ez","","24","Q2: 5k Ez + 2k Thr + 3k Mp + 2k Thr + 3k Mp + 3k Ez","","18","30","","-72",""
+"","","","1","—","Q1 (7 days out): 90' Ez","","21","Q2 (5 days out): 5k Ez + 3 × (2k Thr (2')) + 3k Ez","","13","#VALUE!","","#VALUE!",""

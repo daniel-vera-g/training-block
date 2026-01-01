@@ -17,116 +17,108 @@ export interface TrainingWeek {
     notes?: string;
 }
 
-export const parseTrainingPlan = (csvText: string): TrainingWeek[] => {
-    const lines = csvText.split('\n');
-    // Skip the first 10 lines (header metadata) manually as per the file structure
-    // The structure seems to have actual data starting from line 11 (index 10)
-    // But line 10 (index 9) is the header "Weeks until race,..."
-
-    // We can use PapaParse with "header: true" but we need to pass only the relevant part.
-    // Or we can just slice the array.
-
-    // Looking at the file content:
-    // Line 1-9: Metadata
-    // Line 10: Headers (Weeks until race, Fraction of peak...)
-    // Line 11+: Data
-
-    const dataLines = lines.slice(9).join('\n'); // Keep headers
-
-    // FIX: The specific CSV has unquoted headers with commas "Notes Q1, for Q1"
-    // which causes shifting of columns. We sanitize this known header row.
-    let sanitizedDataLines = dataLines;
-    const headerRow = lines[9];
-    if (headerRow && headerRow.includes('Notes Q1, for Q1')) {
-        // Replace the unquoted header with quoted version in the first line
-        const fixedHeader = headerRow
-            .replace('Notes Q1, for Q1', '"Notes Q1, for Q1"')
-            .replace('Notes Q2, for Q2', '"Notes Q2, for Q2"');
-
-        // Reconstruct data block with fixed header
-        sanitizedDataLines = [fixedHeader, ...lines.slice(10)].join('\n');
-    }
-
-    const { data } = Papa.parse(sanitizedDataLines, {
-        header: true,
-        skipEmptyLines: true,
-        dynamicTyping: true, // Auto convert numbers
+export const parseRawCsv = (csvText: string): string[][] => {
+    // We use dynamicTyping: false to preserve exact string representations (e.g. "0.80" vs "0.8")
+    // We use header: false to get a raw grid
+    const { data } = Papa.parse(csvText, {
+        header: false,
+        skipEmptyLines: false, // Keep empty lines to preserve file structure vertically
     });
-
-    // Map the raw CSV data to our strict interface
-    return data.map((row: any) => {
-        // Helper to safely get string
-        const getStr = (key: string) => row[key] ? String(row[key]).trim() : '';
-        // Helper to safely get number (handling potential parsing errors)
-        const getNum = (key: string) => {
-            const val = row[key];
-            if (typeof val === 'number') return val;
-            if (typeof val === 'string') {
-                const parsed = parseFloat(val);
-                return isNaN(parsed) ? undefined : parsed;
-            }
-            return undefined;
-        }
-
-        return {
-            weeksUntilRace: getNum('Weeks until race') || 0,
-            fractionOfPeak: getNum('Fraction of peak') || 0,
-            q1: {
-                description: getStr('Workout Q1 (k)'),
-                notes: getStr('Notes Q1, for Q1'),
-            },
-            q2: {
-                description: getStr('Worout Q2 ()'), // Note the typo in CSV header 'Worout'
-                notes: getStr('Notes Q2, for Q2'),
-            },
-            weeklyEasyMileage: getNum('Weekly Easy Mileage (k)') || 0,
-            actualMileage: getNum('Actual (k)'),
-            difference: getNum('Difference (k)'),
-            notes: getStr('Notes'),
-        };
-    }).filter(week => week.weeksUntilRace !== 0 || week.q1.description !== ''); // Simple filter for empty rows if any
+    return data as string[][];
 };
 
-export const convertToCSV = (weeks: TrainingWeek[], originalHeaderLines: string[]) => {
-    // We need to reconstruct the CSV.
-    // 1. Join the original headers but apply the same fix to ensure future stability
-    const headerSection = originalHeaderLines.map(line => {
-        if (line.includes('Notes Q1, for Q1') && !line.includes('"Notes Q1, for Q1"')) {
-            return line
-                .replace('Notes Q1, for Q1', '"Notes Q1, for Q1"')
-                .replace('Notes Q2, for Q2', '"Notes Q2, for Q2"');
+export const getWeeksFromRaw = (rawRows: string[][]): TrainingWeek[] => {
+    // Data starts at index 10 (line 11)
+    // Structure:
+    // 0-2: Empty
+    // 3: Weeks until race
+    // 4: Fraction
+    // 5: Q1 Desc
+    // 6: Q1 Notes
+    // 7: Q2 Desc
+    // 8: Q2 Notes
+    // 9: Easy Mileage
+    // 10: Actual
+    // 11: Difference
+    // 12: Weekly Notes
+
+    const weeks: TrainingWeek[] = [];
+
+    // Slice from line 10 to end
+    // Loop through and map safely
+    for (let i = 10; i < rawRows.length; i++) {
+        const row = rawRows[i];
+        if (!row || row.length < 5) continue; // Skip evidently empty/malformed rows
+
+        // Helper
+        const getNum = (idx: number) => {
+            const val = row[idx];
+            if (!val) return undefined;
+            const parsed = parseFloat(val);
+            return isNaN(parsed) ? undefined : parsed;
+        };
+        const getStr = (idx: number) => row[idx] || '';
+
+        const w: TrainingWeek = {
+            weeksUntilRace: getNum(3) || 0,
+            fractionOfPeak: getNum(4) || 0,
+            q1: {
+                description: getStr(5),
+                notes: getStr(6),
+            },
+            q2: {
+                description: getStr(7),
+                notes: getStr(8),
+            },
+            weeklyEasyMileage: getNum(9) || 0,
+            actualMileage: getNum(10),
+            difference: getNum(11),
+            notes: getStr(12)
+        };
+
+        // Filter based on existing valid data to avoid showing empty trailing rows
+        if (w.weeksUntilRace !== 0 || w.q1.description !== '') {
+            weeks.push(w);
         }
-        return line;
-    }).join('\n');
+    }
+    return weeks;
+};
 
-    // 2. Map data to rows
-    // Columns: ,,,Weeks until race,Fraction of peak,Workout Q1 (k),Notes Q1, for Q1,Worout Q2 (),Notes Q2, for Q2,Weekly Easy Mileage (k),Actual (k),Difference (k),Notes
+export const updateRawData = (rawRows: string[][], weekIndex: number, updatedWeek: TrainingWeek): string[][] => {
+    // The first week in `weeks` corresponds to rawRows[10].
+    // weekIndex 0 -> rawRows[10]
 
-    const escape = (str?: string | number) => {
-        if (str === undefined || str === null) return '';
-        const s = String(str);
-        if (s.includes(',') || s.includes('"') || s.includes('\n')) {
-            return `"${s.replace(/"/g, '""')}"`;
-        }
-        return s;
-    };
+    const targetRowIndex = 10 + weekIndex;
 
-    const dataRows = weeks.map(w => {
-        // There are 3 empty columns at start
-        return [
-            '', '', '',
-            w.weeksUntilRace,
-            w.fractionOfPeak,
-            escape(w.q1.description),
-            escape(w.q1.notes),
-            escape(w.q2.description),
-            escape(w.q2.notes),
-            w.weeklyEasyMileage,
-            w.actualMileage === undefined ? '' : w.actualMileage,
-            w.difference === undefined ? '' : w.difference,
-            escape(w.notes)
-        ].join(',');
-    }).join('\n');
+    if (targetRowIndex >= rawRows.length) return rawRows; // Out of bounds?
 
-    return headerSection + '\n' + dataRows;
+    const newRows = [...rawRows]; // Shallow copy array
+    const newRow = [...(newRows[targetRowIndex] || [])]; // Shallow copy row
+
+    // Ensure row has enough columns
+    while (newRow.length < 13) newRow.push('');
+
+    // Update ONLY editable fields
+    // Actual: Index 10
+    newRow[10] = updatedWeek.actualMileage !== undefined ? String(updatedWeek.actualMileage) : '';
+
+    // Weekly Notes: Index 12
+    newRow[12] = updatedWeek.notes || '';
+
+    // Q1 Notes: Index 6
+    newRow[6] = updatedWeek.q1.notes || '';
+
+    // Q2 Notes: Index 8
+    newRow[8] = updatedWeek.q2.notes || '';
+
+    newRows[targetRowIndex] = newRow;
+    return newRows;
+};
+
+export const rawToCSV = (rawRows: string[][]): string => {
+    return Papa.unparse(rawRows, {
+        quotes: true, // Force quotes for safety, or let Papa decide?
+        // If we want "exact as possible", maybe default is better.
+        // Papa defaults to quoting only when necessary.
+    });
 };

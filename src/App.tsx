@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
-import { type TrainingWeek, parseTrainingPlan, convertToCSV } from './lib/parser';
+import { type TrainingWeek, parseRawCsv, getWeeksFromRaw, updateRawData, rawToCSV } from './lib/parser';
 import { WeekCard } from './components/WeekCard';
 import { Activity, Trophy, Calendar, Check } from 'lucide-react';
 
 function App() {
   const [weeks, setWeeks] = useState<TrainingWeek[]>([]);
-  const [headers, setHeaders] = useState<string[]>([]);
+  const [rawGrid, setRawGrid] = useState<string[][]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
@@ -18,10 +18,14 @@ function App() {
         return response.text();
       })
       .then(text => {
-        const lines = text.split('\n');
-        setHeaders(lines.slice(0, 9)); // Store headers
-        const data = parseTrainingPlan(text);
+        // Parse raw grid
+        const grid = parseRawCsv(text);
+        setRawGrid(grid);
+
+        // Derive UI model
+        const data = getWeeksFromRaw(grid);
         setWeeks(data);
+
         setLoading(false);
       })
       .catch(err => {
@@ -31,10 +35,11 @@ function App() {
       });
   }, []);
 
-  const savePlan = async (updatedWeeks: TrainingWeek[]) => {
+  const savePlan = async (currentGrid: string[][]) => {
     setSaving(true);
     try {
-      const csvText = convertToCSV(updatedWeeks, headers);
+      // Convert raw grid back to CSV
+      const csvText = rawToCSV(currentGrid);
       const res = await fetch('/api/save', {
         method: 'POST',
         body: csvText,
@@ -51,19 +56,28 @@ function App() {
   };
 
   const handleUpdate = (index: number, newWeek: TrainingWeek) => {
+    // 1. Update UI state
     const newWeeks = [...weeks];
     newWeeks[index] = newWeek;
     setWeeks(newWeeks);
+
+    // 2. Update Raw Grid state
+    if (rawGrid.length > 0) {
+      const newGrid = updateRawData(rawGrid, index, newWeek);
+      setRawGrid(newGrid);
+    }
   };
 
-  // Debounce autosave
+  // Debounce autosave on RAW GRID change
+  // We use a ref or check if rawGrid has changed significantly?
+  // Just dependency on rawGrid is enough.
   useEffect(() => {
-    if (weeks.length === 0 || loading) return;
+    if (rawGrid.length === 0 || loading) return;
     const timer = setTimeout(() => {
-      savePlan(weeks);
+      savePlan(rawGrid);
     }, 1500);
     return () => clearTimeout(timer);
-  }, [weeks]);
+  }, [rawGrid]);
 
 
   const currentWeekIndex = weeks.findIndex(w => !w.actualMileage);
