@@ -18,8 +18,6 @@ export const saveToGitHub = async (config: GitHubConfig, content: string): Promi
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Accept': 'application/vnd.github.v3+json',
-                'Cache-Control': 'no-store, no-cache, must-revalidate',
-                'Pragma': 'no-cache',
             },
         });
 
