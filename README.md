@@ -49,3 +49,15 @@ The app reads from and writes to `public/plan.csv`.
 - **Styling**: Tailwind CSS v4
 - **Icons**: Lucide React
 - **Data Parsing**: PapaParse
+
+## Security 🛡️
+
+**Important:** When using the GitHub Sync feature, your Personal Access Token is stored in your browser's Local Storage.
+
+To ensure maximum security:
+1.  **Do NOT use a Classic Token.**
+2.  Use a **Fine-Grained Personal Access Token**.
+3.  Scope it **ONLY** to this specific repository (`training-block`).
+4.  Grant `Contents` -> `Read and Write` permissions.
+
+This ensures that even if your token is compromised, your other repositories remain safe.
