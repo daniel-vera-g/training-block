@@ -27,6 +27,58 @@ export const parseRawCsv = (csvText: string): string[][] => {
     return data as string[][];
 };
 
+// Helper to extract distance from description
+const extractDistance = (text: string): number => {
+    if (!text) return 0;
+
+    // 1. Convert specific units first
+    // 400m -> 0.4k
+    let processedText = text.replace(/(\d+)\s*m\b/gi, (_, val) => {
+        return (parseFloat(val) / 1000) + 'k';
+    });
+
+    // 2. Normalize "13 Ez" -> "13k"
+    // Match numbers followed by typical running types (Ez, Mp, Thr, I, R) BUT NOT if immediately followed by ' (minutes)
+    processedText = processedText.replace(/(\d+(?:\.\d+)?)\s*(?:Ez|Mp|Thr|I|R)\b/gi, '$1k');
+
+    // 3. Match format "Num (x or *) Num k"
+    const multiRegex = /([0-9]+)\s*[x×*]\s*\(?(\d+(?:\.\d+)?)\s*k/gi;
+
+    // 4. Match simple "Num k"
+    const simpleRegex = /(\d+(?:\.\d+)?)\s*k/gi;
+
+    let total = 0;
+
+    // Split by '+' to separate segments logic
+    const segments = processedText.split('+');
+
+    for (const segment of segments) {
+        let matched = false;
+
+        // Check for multiplication 
+        let multiMatch;
+        // simpleRegex and multiRegex index handling
+        multiRegex.lastIndex = 0; // Reset for each segment
+        while ((multiMatch = multiRegex.exec(segment)) !== null) {
+            const reps = parseFloat(multiMatch[1]);
+            const dist = parseFloat(multiMatch[2]);
+            total += reps * dist;
+            matched = true;
+        }
+
+        if (!matched) {
+            // Check for simple distance
+            let match;
+            simpleRegex.lastIndex = 0; // Reset for each segment
+            while ((match = simpleRegex.exec(segment)) !== null) {
+                total += parseFloat(match[1]);
+            }
+        }
+    }
+
+    return Math.round(total * 10) / 10;
+};
+
 export const getWeeksFromRaw = (rawRows: string[][]): TrainingWeek[] => {
     // Data starts at index 10 (line 11)
     // Row 10 is Header. Check header length to determine layout.
@@ -75,16 +127,21 @@ export const getWeeksFromRaw = (rawRows: string[][]): TrainingWeek[] => {
         };
         const getStr = (idx: number) => row[idx] || '';
 
+        const q1Desc = getStr(IDX.Q1_DESC);
+        const q2Desc = getStr(IDX.Q2_DESC);
+
         const w: TrainingWeek = {
             weeksUntilRace: getNum(IDX.WEEKS) || 0,
             fractionOfPeak: getNum(IDX.FRACTION) || 0,
             q1: {
-                description: getStr(IDX.Q1_DESC),
+                description: q1Desc,
                 notes: getStr(IDX.Q1_NOTE),
+                targetDistance: extractDistance(q1Desc)
             },
             q2: {
-                description: getStr(IDX.Q2_DESC),
+                description: q2Desc,
                 notes: getStr(IDX.Q2_NOTE),
+                targetDistance: extractDistance(q2Desc)
             },
             weeklyEasyMileage: getNum(IDX.EASY) || 0,
             actualMileage: getNum(IDX.ACTUAL),
@@ -110,11 +167,13 @@ export const updateRawData = (rawRows: string[][], weekIndex: number, updatedWee
         Q1_NOTE: 6,
         Q2_NOTE: 9,
         ACTUAL: 12,
+        DIFF: 13,
         NOTES: 14
     } : {
         Q1_NOTE: 6,
         Q2_NOTE: 8,
         ACTUAL: 10,
+        DIFF: 11,
         NOTES: 12
     };
 
@@ -131,6 +190,9 @@ export const updateRawData = (rawRows: string[][], weekIndex: number, updatedWee
     newRow[IDX.NOTES] = updatedWeek.notes || '';
     newRow[IDX.Q1_NOTE] = updatedWeek.q1.notes || '';
     newRow[IDX.Q2_NOTE] = updatedWeek.q2.notes || '';
+
+    // Also update difference if provided
+    newRow[IDX.DIFF] = updatedWeek.difference !== undefined ? String(updatedWeek.difference) : '';
 
     newRows[targetRowIndex] = newRow;
     return newRows;

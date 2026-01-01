@@ -41,9 +41,16 @@ export const WeekCard: React.FC<WeekCardProps> = ({ week, isCurrent, onUpdate })
     const handleActualChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const val = parseFloat(e.target.value);
         if (!isNaN(val)) {
-            onUpdate({ ...week, actualMileage: val });
+            // Calculate total target: Easy + Q1 + Q2
+            const targetTotal = (week.weeklyEasyMileage || 0) + (week.q1.targetDistance || 0) + (week.q2.targetDistance || 0);
+
+            // Calculate difference: Actual - Target
+            // Round to 1 decimal place
+            const diff = Math.round((val - targetTotal) * 10) / 10;
+
+            onUpdate({ ...week, actualMileage: val, difference: diff });
         } else {
-            onUpdate({ ...week, actualMileage: undefined });
+            onUpdate({ ...week, actualMileage: undefined, difference: undefined });
         }
     };
 
