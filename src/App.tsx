@@ -134,14 +134,19 @@ function App() {
     }
   };
 
+  // Read Only Mode determined by:
+  // 1. Production Build AND
+  // 2. No GitHub Config present
+  const isReadOnly = import.meta.env.PROD && !ghConfig;
+
   // Debounce autosave on RAW GRID change
   useEffect(() => {
-    if (rawGrid.length === 0 || loading) return;
+    if (rawGrid.length === 0 || loading || isReadOnly) return;
     const timer = setTimeout(() => {
       savePlan(rawGrid);
     }, 1500);
     return () => clearTimeout(timer);
-  }, [rawGrid]);
+  }, [rawGrid, isReadOnly]);
 
 
   const currentWeekIndex = weeks.findIndex(w => !w.actualMileage);
@@ -156,10 +161,7 @@ function App() {
     }
   }, [loading]);
 
-  // Read Only Mode determined by:
-  // 1. Production Build AND
-  // 2. No GitHub Config present
-  const isReadOnly = import.meta.env.PROD && !ghConfig;
+
 
   return (
     <div className="min-h-screen bg-[#111] text-white selection:bg-blue-500/30">
