@@ -12,10 +12,14 @@ export const saveToGitHub = async (config: GitHubConfig, content: string): Promi
 
     try {
         // 1. Get current file SHA (needed for update)
-        const getRes = await fetch(`${apiUrl}?ref=${branch}`, {
+        // Add cache busting to ensure we get the latest SHA
+        const timestamp = new Date().getTime();
+        const getRes = await fetch(`${apiUrl}?ref=${branch}&t=${timestamp}`, {
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Accept': 'application/vnd.github.v3+json',
+                'Cache-Control': 'no-store, no-cache, must-revalidate',
+                'Pragma': 'no-cache',
             },
         });
 

@@ -9,6 +9,7 @@ function App() {
   const [rawGrid, setRawGrid] = useState<string[][]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [saveError, setSaveError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
 
@@ -97,6 +98,7 @@ function App() {
 
   const savePlan = async (currentGrid: string[][]) => {
     setSaving(true);
+    setSaveError(null);
     try {
       const csvText = rawToCSV(currentGrid);
 
@@ -118,7 +120,7 @@ function App() {
       console.error(e);
       // Show the actual error message if available, otherwise generic
       const msg = e.message || 'Failed to save changes';
-      setError(`Save failed: ${msg}`);
+      setSaveError(`Save failed: ${msg}`);
     } finally {
       setSaving(false);
     }
@@ -237,6 +239,15 @@ function App() {
         {error && (
           <div className="bg-red-500/10 border border-red-500/20 p-6 rounded-2xl text-red-400 text-center">
             <p>Error loading plan: {error}</p>
+          </div>
+        )}
+
+        {saveError && (
+          <div className="bg-orange-500/10 border border-orange-500/20 p-4 rounded-xl text-orange-400 text-sm flex items-center justify-between">
+            <p>{saveError}</p>
+            <button onClick={() => savePlan(rawGrid)} className="px-3 py-1 bg-orange-500/20 hover:bg-orange-500/30 rounded text-xs transition-colors">
+              Retry
+            </button>
           </div>
         )}
 
