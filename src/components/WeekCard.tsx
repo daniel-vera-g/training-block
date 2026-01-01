@@ -35,7 +35,7 @@ const WorkoutSection = ({ title, workout, colorClass, onNotesChange }: { title: 
     </div>
 );
 
-export const WeekCard: React.FC<WeekCardProps> = ({ week, isCurrent, onUpdate }) => {
+export const WeekCard = React.forwardRef<HTMLDivElement, WeekCardProps>(({ week, isCurrent, onUpdate }, ref) => {
     const isDone = week.actualMileage !== undefined && week.actualMileage > 0;
 
     const handleActualChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -67,7 +67,7 @@ export const WeekCard: React.FC<WeekCardProps> = ({ week, isCurrent, onUpdate })
     };
 
     return (
-        <div className={cn(
+        <div ref={ref} className={cn(
             "rounded-2xl border transition-all duration-300 overflow-hidden group/card",
             isCurrent
                 ? "bg-blue-500/10 border-blue-500 ring-1 ring-blue-500 shadow-[0_0_30px_rgba(59,130,246,0.2)]"
@@ -182,4 +182,5 @@ export const WeekCard: React.FC<WeekCardProps> = ({ week, isCurrent, onUpdate })
             </div>
         </div>
     );
-};
+});
+WeekCard.displayName = 'WeekCard';

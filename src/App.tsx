@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { type TrainingWeek, parseRawCsv, getWeeksFromRaw, updateRawData, rawToCSV } from './lib/parser';
 import { WeekCard } from './components/WeekCard';
 import { Activity, Trophy, Calendar, Check } from 'lucide-react';
@@ -10,6 +10,8 @@ function App() {
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
+
+  const currentWeekRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     fetch('/plan.csv')
@@ -69,8 +71,6 @@ function App() {
   };
 
   // Debounce autosave on RAW GRID change
-  // We use a ref or check if rawGrid has changed significantly?
-  // Just dependency on rawGrid is enough.
   useEffect(() => {
     if (rawGrid.length === 0 || loading) return;
     const timer = setTimeout(() => {
@@ -81,6 +81,16 @@ function App() {
 
 
   const currentWeekIndex = weeks.findIndex(w => !w.actualMileage);
+
+  // Auto-scroll to current week when loading finishes
+  useEffect(() => {
+    if (!loading && currentWeekRef.current) {
+      // Small timeout to ensure DOM is ready/layout is stable
+      setTimeout(() => {
+        currentWeekRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 100);
+    }
+  }, [loading]);
 
   return (
     <div className="min-h-screen bg-[#111] text-white selection:bg-blue-500/30">
@@ -145,6 +155,7 @@ function App() {
               {weeks.map((week, index) => (
                 <WeekCard
                   key={week.weeksUntilRace}
+                  ref={index === currentWeekIndex ? currentWeekRef : null}
                   week={week}
                   isCurrent={index === currentWeekIndex}
                   onUpdate={(newWeek) => handleUpdate(index, newWeek)}
