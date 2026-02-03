@@ -50,6 +50,14 @@ The app reads from and writes to `public/plan.csv`.
 - **Icons**: Lucide React
 - **Data Parsing**: PapaParse
 
+## Deployment
+
+This application is deployed to GitHub Pages. The repository name must match the desired URL path.
+
+**Current configuration**: Configured to be hosted at `danielvg.me/runs`
+
+For detailed deployment information, including how to change the hosting path, see [DEPLOYMENT.md](./DEPLOYMENT.md).
+
 ## Security 🛡️
 
 **Important:** When using the GitHub Sync feature, your Personal Access Token is stored in your browser's Local Storage.
@@ -57,7 +65,7 @@ The app reads from and writes to `public/plan.csv`.
 To ensure maximum security:
 1.  **Do NOT use a Classic Token.**
 2.  Use a **Fine-Grained Personal Access Token**.
-3.  Scope it **ONLY** to this specific repository (`training-block`).
+3.  Scope it **ONLY** to this specific repository.
 4.  Grant `Contents` -> `Read and Write` permissions.
 
 This ensures that even if your token is compromised, your other repositories remain safe.
