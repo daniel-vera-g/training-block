@@ -35,7 +35,7 @@ function App() {
     }
 
     // Fix: Use correct base path for fetching assets
-    // When base is '/training-block/', the file is at '/training-block/plan.csv'
+    // When base is '/runs/', the file is at '/runs/plan.csv'
     const planUrl = import.meta.env.BASE_URL + 'plan.csv';
 
     fetch(planUrl)
